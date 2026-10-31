@@ -1,0 +1,719 @@
+/**
+ * Kahoot Arena & Player Stylesheet
+ * 4 Iconic geometric buttons, circular timer, answer feedback, streak fire & gradebook table.
+ */
+
+/* ====================================================
+   HOST / PROJECTOR ARENA
+   ==================================================== */
+.host-arena-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.arena-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-lg);
+}
+
+.arena-question-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 2.2rem 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arena-question-text {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .arena-question-text {
+    font-size: 1.35rem;
+  }
+}
+
+/* Center Status Bar with Circular Timer & Counters */
+.arena-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.arena-counter-badge {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.counter-val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* Circular Timer */
+.arena-timer-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.timer-svg {
+  transform: rotate(-90deg);
+  width: 90px;
+  height: 90px;
+}
+
+.timer-bg-circle {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 8;
+}
+
+.timer-progress-circle {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 8;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.9s linear, stroke 0.3s ease;
+}
+
+.timer-number-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+/* 4-Color Options Grid (Host View) */
+.options-grid.kahoot-4-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .options-grid.kahoot-4-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kahoot-option-card {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.8rem;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 130px;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-kahoot-red { background: linear-gradient(135deg, #e21b3c, #b3102a); }
+.btn-kahoot-blue { background: linear-gradient(135deg, #1368ce, #0c4a96); }
+.btn-kahoot-yellow { background: linear-gradient(135deg, #d89e00, #a37700); }
+.btn-kahoot-green { background: linear-gradient(135deg, #26890c, #1a6307); }
+
+.opt-symbol {
+  font-size: 1.8rem;
+  line-height: 1;
+  opacity: 0.9;
+  margin-bottom: 0.4rem;
+}
+
+.opt-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* Host Answer Bars */
+.opt-bar-container {
+  margin-top: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 999px;
+  height: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.opt-bar-fill {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.opt-count {
+  position: absolute;
+  right: 8px;
+  top: -18px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+/* Correct / Dimmed states */
+.kahoot-option-card.is-correct {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(74, 222, 128, 0.6);
+  border: 3px solid #ffffff;
+}
+
+.kahoot-option-card.is-correct::after {
+  content: '✔ CORRECTA';
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  background: #ffffff;
+  color: #166534;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.kahoot-option-card.is-dimmed {
+  opacity: 0.35;
+  filter: grayscale(40%);
+}
+
+/* Fill in the blanks Card */
+.fill-blank-card {
+  background: var(--bg-card);
+  border: 2px dashed var(--primary);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.fill-blank-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.fill-blank-revealed {
+  margin-top: 1.5rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--lvl-a1);
+  color: #4ade80;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  font-size: 1.2rem;
+}
+
+/* Pedagogical Explanation Card */
+.explanation-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.15));
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.expl-icon { font-size: 1.8rem; }
+.expl-content { font-size: 1.05rem; }
+
+/* Arena Action Bar */
+.arena-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Leaderboard Modal */
+.leaderboard-modal-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  max-width: 650px;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.leaderboard-modal-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+.leaderboard-modal-box p {
+  color: var(--text-secondary);
+  margin-bottom: 1.8rem;
+}
+
+.leaderboard-students-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.leaderboard-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideRight 0.3s ease;
+}
+
+@keyframes slideRight {
+  from { transform: translateX(-15px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.row-rank {
+  font-size: 1.1rem;
+  font-weight: 800;
+  width: 35px;
+}
+
+.row-avatar { font-size: 1.4rem; margin-right: 0.8rem; }
+.row-name {
+  flex-grow: 1;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.streak-pill {
+  font-size: 0.72rem;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.row-score {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: monospace;
+}
+
+.leaderboard-row.rank-1 { border-color: #fbbf24; background: rgba(251, 191, 36, 0.12); }
+.leaderboard-row.rank-2 { border-color: #94a3b8; background: rgba(148, 163, 184, 0.12); }
+.leaderboard-row.rank-3 { border-color: #d97706; background: rgba(217, 119, 6, 0.12); }
+
+
+/* ====================================================
+   STUDENT / PLAYER ARENA (Interactive Controller)
+   ==================================================== */
+.player-join-card {
+  max-width: 480px;
+  margin: 2rem auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.player-join-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.player-arena-container {
+  max-width: 650px;
+  margin: 0 auto;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.player-screen-sub {
+  display: none;
+  flex-grow: 1;
+}
+
+.player-screen-sub.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  animation: fadeIn 0.25s ease;
+}
+
+/* Player Waiting State */
+.player-waiting-avatar {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: floatEmoji 2.5s infinite ease-in-out;
+}
+
+@keyframes floatEmoji {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Player Answering Buttons (4 massive touch targets) */
+.player-answering-layout {
+  width: 100%;
+}
+
+.player-top-indicator {
+  margin-bottom: 1.5rem;
+}
+
+.player-q-prompt-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 1.2rem;
+  border-radius: var(--radius-lg);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.player-4-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.btn-player-kahoot {
+  border: none;
+  border-radius: var(--radius-lg);
+  height: 140px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 3.5rem;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.btn-player-kahoot:active {
+  transform: scale(0.92);
+}
+
+.btn-player-red { background: linear-gradient(135deg, #e21b3c, #b3102a); }
+.btn-player-blue { background: linear-gradient(135deg, #1368ce, #0c4a96); }
+.btn-player-yellow { background: linear-gradient(135deg, #d89e00, #a37700); }
+.btn-player-green { background: linear-gradient(135deg, #26890c, #1a6307); }
+
+/* Player Fill in Blanks Form */
+.player-blank-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.player-blank-input-group input {
+  font-size: 1.2rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Player Feedback Screens */
+.feedback-correct {
+  background: linear-gradient(135deg, #15803d, #166534);
+  color: #fff;
+  border-radius: var(--radius-xl);
+  padding: 3rem 2rem;
+}
+
+.feedback-wrong {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  color: #fff;
+  border-radius: var(--radius-xl);
+  padding: 3rem 2rem;
+}
+
+.player-feedback-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+}
+
+.player-feedback-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+}
+
+.player-feedback-subtitle {
+  font-size: 1.15rem;
+  opacity: 0.9;
+}
+
+
+/* ====================================================
+   SPLIT-SCREEN DEMO PREVIEW (Side by Side)
+   ==================================================== */
+body.demo-split-screen {
+  overflow-x: auto;
+}
+
+body.demo-split-screen .app-main-content {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+#split-player-container {
+  background: var(--bg-secondary);
+  border: 2px dashed var(--primary);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  position: sticky;
+  top: 75px;
+  height: calc(100vh - 90px);
+  overflow-y: auto;
+}
+
+
+/* ====================================================
+   GRADEBOOK TABLE & ANALYTICS
+   ==================================================== */
+.gradebook-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.gradebook-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.gradebook-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.stats-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon { font-size: 2rem; }
+.stat-data { display: flex; flex-direction: column; }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+.stat-value { font-size: 1.5rem; font-weight: 900; }
+.stat-subvalue { font-size: 0.95rem; font-weight: 700; color: #f87171; }
+
+.text-green { color: #4ade80; }
+.text-purple { color: #c084fc; }
+.text-blue { color: #60a5fa; }
+.text-red { color: #f87171; }
+
+.table-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.input-search {
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 320px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.gradebook-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  text-align: left;
+}
+
+.gradebook-table th {
+  background: var(--bg-secondary);
+  padding: 0.8rem 1rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.gradebook-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.gradebook-table tbody tr:hover {
+  background: var(--bg-secondary);
+}
+
+.rank-cell { text-align: center; }
+.rank-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  background: var(--bg-secondary);
+}
+
+.rank-1 { background: #fbbf24; color: #78350f; }
+.rank-2 { background: #cbd5e1; color: #334155; }
+.rank-3 { background: #f59e0b; color: #451a03; }
+
+.student-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.student-avatar { font-size: 1.3rem; }
+.bot-badge {
+  font-size: 0.65rem;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.progress-bar-inline {
+  width: 80px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #38bdf8;
+  border-radius: 999px;
+}
+
+.kahoot-pts {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* Grade Pills in 1.0 - 5.0 scale */
+.grade-pill {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-sm);
+  font-weight: 900;
+  font-size: 1.05rem;
+  font-family: monospace;
+}
+
+.grade-high { background: rgba(16, 185, 129, 0.2); color: #4ade80; border: 1px solid #10b981; }
+.grade-pass { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
+.grade-fail { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+
+.perf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.badge-excellent { background: rgba(16, 185, 129, 0.15); color: #4ade80; }
+.badge-high { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.badge-basic { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.badge-low { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+
+.status-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.status-pass { background: #166534; color: #bbf7d0; }
+.status-fail { background: #991b1b; color: #fecaca; }
+
+.print-only {
+  display: none;
+}

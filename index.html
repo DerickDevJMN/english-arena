@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kahoot Pro English • Plataforma Educativa Universitaria y Escolar</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/kahoot.css">
+  <link rel="stylesheet" href="css/podium.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       APP HEADER & NAVIGATION
+       ========================================== -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-group" onclick="App.navigateTo('study')">
+        <div class="brand-logo-icon">🇬🇧</div>
+        <div>
+          <span class="brand-title">EnglishArena <span class="brand-badge">PRO</span></span>
+        </div>
+      </div>
+
+      <nav class="main-nav">
+        <button class="nav-link active" data-view="study" onclick="App.navigateTo('study')">
+          <span>📚</span> Estudio CEFR
+        </button>
+        <button class="nav-link" data-view="dashboard" onclick="App.navigateTo('dashboard')">
+          <span>👩‍🏫</span> Panel Profesora
+        </button>
+        <button class="nav-link" data-view="player-join" onclick="App.navigateTo('player-join')">
+          <span>🎮</span> Unirse (PIN)
+        </button>
+      </nav>
+
+      <div class="header-tools">
+        <button class="btn-tool" id="btn-demo-mode" onclick="App.toggleDemoMode()" title="Ver Host y Estudiante lado a lado">
+          🪟 Vista Dividida (Demo Pro)
+        </button>
+        <button class="btn-tool" id="btn-toggle-mute" title="Activar / Desactivar Sonido">
+          🔊 Sonido
+        </button>
+        <button class="btn-tool" id="btn-toggle-theme" onclick="App.toggleTheme()" title="Modo Oscuro / Claro">
+          ☀️ Modo Claro
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       MAIN CONTENT CONTAINER
+       ========================================== -->
+  <main class="app-main-content">
+    <div class="views-wrapper">
+
+      <!-- ==========================================
+           1. VIEW: STUDY HUB (CEFR A1 - B2)
+           ========================================== -->
+      <section id="view-study" class="view-screen active">
+        <div class="hero-banner">
+          <span class="topic-level-badge level-B2" style="margin-bottom: 0.5rem; display: inline-block;">Marco Común Europeo (CEFR A1 - B2)</span>
+          <h1>Plataforma de Dominio del Idioma Inglés</h1>
+          <p>Módulo interactivo de estudio, teoría gramatical, ejemplos de la vida real, pronunciación con voz nativa y preparación para exámenes parciales.</p>
+          <div class="hero-action-row">
+            <button class="btn btn-kahoot-action" onclick="App.navigateTo('dashboard')">
+              👩‍🏫 Crear Sala de Parcial en Vivo
+            </button>
+            <button class="btn btn-secondary" onclick="App.navigateTo('player-join')">
+              🎮 Ingresar con PIN de Sala
+            </button>
+          </div>
+        </div>
+
+        <!-- Level Filters -->
+        <div class="filter-bar" id="study-level-filters">
+          <!-- Populated by StudyHub.renderLevelFilters() -->
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box-wrapper">
+          <span class="search-icon-fixed">🔍</span>
+          <input type="text" id="study-search-input" placeholder="Buscar por tema (ej. Present Simple, Third Conditional), regla o vocabulario...">
+        </div>
+
+        <!-- Topics Grid -->
+        <div class="topics-grid" id="study-topics-grid">
+          <!-- Populated by StudyHub.renderTopics() -->
+        </div>
+      </section>
+
+      <!-- ==========================================
+           2. VIEW: TEACHER DASHBOARD (Setup Quiz)
+           ========================================== -->
+      <section id="view-dashboard" class="view-screen">
+        <div class="dashboard-grid">
+          <div class="dash-card">
+            <h2>Configurar Sesión de Parcial en Vivo</h2>
+            <p class="dash-card-desc">Personaliza los parámetros del examen o taller antes de habilitar la sala para tus estudiantes.</p>
+
+            <form id="quiz-config-form" onsubmit="App.createQuizRoom(event)">
+              <div class="form-group">
+                <label for="quiz-level-select">1. Nivel del Marco CEFR:</label>
+                <select id="quiz-level-select" class="form-control">
+                  <option value="A1">Nivel A1 • Beginner / Principiante</option>
+                  <option value="A2">Nivel A2 • Elementary / Básico</option>
+                  <option value="B1" selected>Nivel B1 • Intermediate / Intermedio</option>
+                  <option value="B2">Nivel B2 • Upper Intermediate / Avanzado</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="quiz-topic-select">2. Tema Específico o Parcial General:</label>
+                <select id="quiz-topic-select" class="form-control">
+                  <!-- Populated dynamically based on level -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="quiz-activity-type">3. Tipo de Actividad Académica:</label>
+                <select id="quiz-activity-type" class="form-control">
+                  <option value="Quiz Corto">Quiz Corto (5 preguntas rápidas)</option>
+                  <option value="Taller Interactivo" selected>Taller Interactivo (10 preguntas formativas)</option>
+                  <option value="Parcial Final Pro">Parcial Final Pro (15 preguntas sumativas)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="quiz-time-select">4. Tiempo por Pregunta (Segundos):</label>
+                <select id="quiz-time-select" class="form-control">
+                  <option value="15">15 Segundos (Máxima adrenalina)</option>
+                  <option value="20" selected>20 Segundos (Recomendado estándar)</option>
+                  <option value="30">30 Segundos (Intermedio reflexivo)</option>
+                  <option value="45">45 Segundos (Ideal para redacción/fill blanks)</option>
+                  <option value="60">60 Segundos (Análisis profundo)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="quiz-weight-input">5. Ponderación en Nota Final (Escala 1.0 a 5.0):</label>
+                <select id="quiz-weight-input" class="form-control">
+                  <option value="20%">20% del corte académico</option>
+                  <option value="25%" selected>25% del corte académico</option>
+                  <option value="30%">30% del corte académico</option>
+                  <option value="50%">50% Parcial de mitad de semestre</option>
+                  <option value="100%">100% Nota única de la actividad</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-kahoot-action" style="width: 100%; margin-top: 1rem;">
+                🚀 Crear Sala de Parcial / Quiz
+              </button>
+            </form>
+          </div>
+
+          <div class="info-cards-column">
+            <div class="info-banner-item">
+              <div class="info-banner-icon">🎯</div>
+              <div class="info-banner-text">
+                <h4>Generación de PIN y Código QR</h4>
+                <p>Al crear la sala, se genera automáticamente un PIN de 6 dígitos y un código QR scannable para que los estudiantes ingresen con sus celulares o computadores.</p>
+              </div>
+            </div>
+
+            <div class="info-banner-item">
+              <div class="info-banner-icon">🤖</div>
+              <div class="info-banner-text">
+                <h4>Simulador de Estudiantes (Bots)</h4>
+                <p>¿Quieres proyectar o probar el sistema tú sola? En el lobby puedes hacer clic en "Añadir Alumnos Simulados" para llenar la sala instantáneamente con perfiles realistas.</p>
+              </div>
+            </div>
+
+            <div class="info-banner-item">
+              <div class="info-banner-icon">📊</div>
+              <div class="info-banner-text">
+                <h4>Libro de Calificaciones (1.0 a 5.0)</h4>
+                <p>Al concluir el examen, el sistema genera automáticamente el reporte oficial con notas calculadas sobre 5.0, porcentaje de aciertos, opción de descarga a Excel/CSV e impresión.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           3. VIEW: WAITING LOBBY (Live Room)
+           ========================================== -->
+      <section id="view-lobby" class="view-screen">
+        <div class="lobby-screen-layout">
+          <div class="lobby-top-bar">
+            <div class="lobby-meta-pills">
+              <span class="topic-level-badge level-B1" id="lobby-level-badge">B1 • CEFR</span>
+              <span class="activity-type-pill" id="lobby-topic-badge">Conditionals</span>
+              <span class="activity-type-pill" id="lobby-qcount-badge">10 Preguntas</span>
+            </div>
+            <button class="btn btn-secondary" onclick="App.navigateTo('dashboard')">
+              ✕ Cancelar Sala
+            </button>
+          </div>
+
+          <!-- Giant PIN Banner -->
+          <div class="lobby-pin-hero">
+            <div class="lobby-pin-label">PIN DE ACCESO DE LA SALA</div>
+            <div class="lobby-pin-number" id="lobby-pin-display">------</div>
+          </div>
+
+          <!-- QR and Join Instructions -->
+          <div class="lobby-access-grid">
+            <div class="lobby-qr-box" id="lobby-qr-container">
+              <!-- QR Code SVG inserted here -->
+            </div>
+            <div class="lobby-access-instructions">
+              <h3>¿Cómo unirse al parcial en vivo?</h3>
+              <ol>
+                <li>Ingresa a la aplicación desde tu dispositivo (computador, tablet o smartphone).</li>
+                <li>Haz clic en <strong>"Unirse (PIN)"</strong> e ingresa el código numérico de 6 dígitos.</li>
+                <li>Escribe tu <strong>Nombre completo</strong> y Código estudiantil.</li>
+              </ol>
+              <div class="join-link-box" id="lobby-join-url">
+                https://...
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Student Grid -->
+          <div class="lobby-students-section">
+            <div class="lobby-section-header">
+              <h3>
+                Alumnos en la Sala
+                <span class="lobby-count-pill" id="lobby-student-count">0</span>
+              </h3>
+              <div class="lobby-quick-actions">
+                <button class="btn btn-secondary" onclick="App.addSimulatedStudents(5)">
+                  + Añadir 5 Alumnos Simulados
+                </button>
+                <button class="btn btn-secondary" onclick="App.addSimulatedStudents(10)">
+                  + Añadir 10
+                </button>
+              </div>
+            </div>
+
+            <div class="lobby-students-grid" id="lobby-students-grid">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Big Start Quiz Button -->
+          <div style="margin-top: 2rem;">
+            <button class="btn btn-kahoot-action" style="font-size: 1.3rem; padding: 1.2rem 3rem;" onclick="App.startQuizCountdown()">
+              ▶️ ¡Iniciar Parcial Ahora!
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           4. VIEW: LIVE ARENA HOST (Projector Screen)
+           ========================================== -->
+      <section id="view-arena-host" class="view-screen">
+        <div class="host-arena-layout">
+          <div class="arena-top-bar">
+            <div class="badge-row">
+              <span class="topic-level-badge level-B1" id="arena-level-badge">B1 • Topic</span>
+              <span class="activity-type-pill" id="arena-progress-badge">Pregunta 1 de 10</span>
+            </div>
+            <div class="header-tools">
+              <button class="btn-tool" onclick="soundEngine.toggleMute()">Música On/Off</button>
+            </div>
+          </div>
+
+          <!-- Question Box -->
+          <div class="arena-question-box">
+            <h2 class="arena-question-text" id="arena-question-text">
+              Loading question prompt...
+            </h2>
+          </div>
+
+          <!-- Status Bar: Answers count & Circular Timer -->
+          <div class="arena-status-bar">
+            <div class="arena-counter-badge">
+              <span class="counter-label">Respuestas</span>
+              <span class="counter-val" id="arena-answers-count">0 / 0</span>
+            </div>
+
+            <!-- Circular Animated Timer -->
+            <div class="arena-timer-container">
+              <svg class="timer-svg" viewBox="0 0 100 100">
+                <circle class="timer-bg-circle" cx="50" cy="50" r="45"></circle>
+                <circle class="timer-progress-circle" id="arena-timer-svg-circle" cx="50" cy="50" r="45"></circle>
+              </svg>
+              <div class="timer-number-center" id="arena-timer-number">20</div>
+            </div>
+
+            <div class="arena-counter-badge">
+              <span class="counter-label">Tiempo</span>
+              <span class="counter-val">Segundos</span>
+            </div>
+          </div>
+
+          <!-- 4 Options Grid -->
+          <div id="arena-options-grid" class="options-grid kahoot-4-grid">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Pedagogical Feedback Card (shown when time expires) -->
+          <div class="explanation-card hidden" id="arena-explanation-card">
+            <div class="expl-icon">💡</div>
+            <div class="expl-content" id="arena-explanation-text">
+              Explicación pedagógica...
+            </div>
+          </div>
+
+          <!-- Arena Action Bar -->
+          <div class="arena-actions-bar">
+            <button class="btn btn-kahoot-action hidden" id="btn-show-leaderboard" onclick="App.showLeaderboardModal()">
+              📊 Ver Tabla de Posiciones →
+            </button>
+            <button class="btn btn-primary hidden" id="btn-next-question" onclick="App.advanceFromLeaderboard()">
+              Siguiente Pregunta →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           5. VIEW: STUDENT ENTRY (Join by PIN)
+           ========================================== -->
+      <section id="view-player-join" class="view-screen">
+        <div class="player-join-card">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎮</div>
+          <h2>Ingresar al Parcial en Vivo</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Digita el PIN proyectado por la profesora y tus datos estudiantiles.</p>
+
+          <form onsubmit="App.joinRoomAsPlayer(event)">
+            <div class="form-group" style="text-align: left;">
+              <label for="player-pin-input">PIN de la Sala:</label>
+              <input type="text" id="player-pin-input" class="form-control" placeholder="Ej. 742918" maxlength="6" style="font-size: 1.4rem; letter-spacing: 4px; text-align: center;" required>
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+              <label for="player-name-input">Nombre y Apellido:</label>
+              <input type="text" id="player-name-input" class="form-control" placeholder="Ej. Valentina Castro" required>
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+              <label for="player-code-input">Código Estudiantil (Opcional):</label>
+              <input type="text" id="player-code-input" class="form-control" placeholder="Ej. ENG-2024-045">
+            </div>
+
+            <div class="form-group" style="text-align: left;">
+              <label for="player-avatar-select">Elige tu Avatar:</label>
+              <select id="player-avatar-select" class="form-control">
+                <option value="🦊">🦊 Zorro Estratega</option>
+                <option value="🦁">🦁 León Valiente</option>
+                <option value="🦉">🦉 Búho Erudito</option>
+                <option value="🐼">🐼 Panda Veloz</option>
+                <option value="🚀">🚀 Cohete Apolo</option>
+                <option value="⚡">⚡ Relámpago Veloz</option>
+                <option value="🦄">🦄 Unicornio Mágico</option>
+                <option value="🐯">🐯 Tigre Feroz</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-kahoot-action" style="width: 100%; margin-top: 1rem;">
+              ¡Entrar a la Sala!
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           6. VIEW: STUDENT ARENA (Player Controller)
+           ========================================== -->
+      <section id="view-player-arena" class="view-screen">
+        <div class="player-arena-container">
+          <!-- Sub-screen 1: Waiting for host to start -->
+          <div id="player-screen-waiting" class="player-screen-sub active">
+            <div class="player-waiting-avatar" id="player-wait-avatar">🦊</div>
+            <h2>¡Estás dentro, <span id="player-wait-name">Estudiante</span>!</h2>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem;">Sala PIN: <strong id="player-wait-pin">---</strong></p>
+            <div class="lobby-waiting-hint">
+              <div class="pulse-radar">📡</div>
+              <p>Esperando a que la profesora inicie el parcial...</p>
+              <small>¡Prepárate! Mira la pantalla principal del aula.</small>
+            </div>
+          </div>
+
+          <!-- Sub-screen 2: Answering State (4 Tactile Kahoot Buttons) -->
+          <div id="player-screen-answering" class="player-screen-sub player-answering-layout">
+            <div class="player-top-indicator">
+              <span class="activity-type-pill" id="player-q-counter">Pregunta 1 de 10</span>
+            </div>
+            
+            <div class="player-q-prompt-box" id="player-q-prompt">
+              Question prompt...
+            </div>
+
+            <!-- Multiple Choice 4 Buttons -->
+            <div id="player-mc-controls" class="player-4-buttons-grid">
+              <button class="btn-player-kahoot btn-player-red" onclick="App.playerAnswer(0)">
+                ▲
+              </button>
+              <button class="btn-player-kahoot btn-player-blue" onclick="App.playerAnswer(1)">
+                ◆
+              </button>
+              <button class="btn-player-kahoot btn-player-yellow" onclick="App.playerAnswer(2)">
+                ●
+              </button>
+              <button class="btn-player-kahoot btn-player-green" onclick="App.playerAnswer(3)">
+                ■
+              </button>
+            </div>
+
+            <!-- Fill in the Blank Controls -->
+            <div id="player-fb-controls" class="player-blank-input-group hidden">
+              <input type="text" id="player-text-answer" class="form-control" placeholder="Escribe tu respuesta aquí...">
+              <button class="btn btn-kahoot-action" onclick="App.playerAnswer(-1)">
+                Enviar Respuesta
+              </button>
+            </div>
+          </div>
+
+          <!-- Sub-screen 3: Answer Submitted (Waiting for others) -->
+          <div id="player-screen-submitted" class="player-screen-sub">
+            <div style="font-size: 4.5rem; margin-bottom: 1rem;">⏳</div>
+            <h2>¡Respuesta Enviada!</h2>
+            <p style="color: var(--text-secondary); margin-top: 0.5rem;">Esperando a que los demás compañeros respondan o termine el tiempo...</p>
+          </div>
+
+          <!-- Sub-screen 4: Immediate Feedback (Correct / Wrong) -->
+          <div id="player-screen-feedback" class="player-screen-sub">
+            <div class="player-feedback-icon" id="player-feedback-icon">✅</div>
+            <h2 class="player-feedback-title" id="player-feedback-title">¡CORRECTO!</h2>
+            <p class="player-feedback-subtitle" id="player-feedback-subtitle">+950 puntos ganados</p>
+          </div>
+
+          <!-- Sub-screen 5: Finished -->
+          <div id="player-screen-finished" class="player-screen-sub">
+            <div style="font-size: 5rem; margin-bottom: 1rem;">🏆</div>
+            <h2>¡Parcial Finalizado!</h2>
+            <p style="color: var(--text-secondary);">Mira la pantalla principal para ver el podio y las calificaciones finales.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           7. VIEW: 3D PODIUM & CELEBRATION
+           ========================================== -->
+      <section id="view-podium" class="view-screen">
+        <canvas id="confetti-canvas"></canvas>
+
+        <div class="podium-screen-layout">
+          <div class="podium-header-banner">
+            <h1>🏆 ¡PODIO DE GANADORES! 🏆</h1>
+            <p>Felicitaciones a los mejores puntajes del parcial interactivo.</p>
+          </div>
+
+          <!-- 3D Isometric Pedestals -->
+          <div class="podium-stage-container">
+            <!-- 2nd Place (Silver) -->
+            <div class="podium-column podium-second">
+              <div class="podium-avatar-card">
+                <div class="trophy-badge">🥈</div>
+                <div class="podium-avatar-circle" id="podium-2nd-avatar">🦁</div>
+                <div class="podium-student-name" id="podium-2nd-name">Estudiante 2</div>
+                <div class="podium-student-score" id="podium-2nd-score">0 pts</div>
+              </div>
+              <div class="pedestal-block">
+                <span class="pedestal-number">2</span>
+              </div>
+            </div>
+
+            <!-- 1st Place (Gold Champion) -->
+            <div class="podium-column podium-first">
+              <div class="podium-avatar-card">
+                <div class="trophy-badge">🥇</div>
+                <div class="podium-avatar-circle" id="podium-1st-avatar">🦊</div>
+                <div class="podium-student-name" id="podium-1st-name">Campeón(a)</div>
+                <div class="podium-student-score" id="podium-1st-score">0 pts</div>
+              </div>
+              <div class="pedestal-block">
+                <span class="pedestal-number">1</span>
+              </div>
+            </div>
+
+            <!-- 3rd Place (Bronze) -->
+            <div class="podium-column podium-third">
+              <div class="podium-avatar-card">
+                <div class="trophy-badge">🥉</div>
+                <div class="podium-avatar-circle" id="podium-3rd-avatar">🐼</div>
+                <div class="podium-student-name" id="podium-3rd-name">Estudiante 3</div>
+                <div class="podium-student-score" id="podium-3rd-score">0 pts</div>
+              </div>
+              <div class="pedestal-block">
+                <span class="pedestal-number">3</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Full Leaderboard Table below -->
+          <div class="podium-rankings-box">
+            <h3>Tabla de Posiciones Completa</h3>
+            <div class="podium-full-rankings-grid" id="podium-full-rankings">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <div class="podium-actions-bar">
+            <button class="btn btn-kahoot-action" onclick="App.openGradebookFromPodium()">
+              📋 Ver Libro Oficial de Calificaciones (Gradebook) →
+            </button>
+            <button class="btn btn-secondary" onclick="App.navigateTo('dashboard')">
+              ← Crear Otra Sala
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           8. VIEW: GRADEBOOK & REPORT
+           ========================================== -->
+      <section id="view-gradebook" class="view-screen">
+        <!-- Rendered completely by Gradebook.renderView() -->
+      </section>
+
+    </div>
+
+    <!-- ==========================================
+         SPLIT SCREEN CONTAINER (DEMO PREVIEW)
+         ========================================== -->
+    <aside id="split-player-container" class="hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <span class="activity-type-pill">📱 Mando del Estudiante</span>
+        <button class="btn-tool" onclick="App.toggleDemoMode()">✕</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Interactúa en tiempo real como un alumno mientras manejas la pantalla de la profesora.
+      </p>
+
+      <!-- Mini Player Form or Controls -->
+      <div id="split-player-content">
+        <!-- The player arena or join form dynamically binds here -->
+      </div>
+    </aside>
+  </main>
+
+  <!-- ==========================================
+       MODALS & OVERLAYS
+       ========================================== -->
+
+  <!-- 3-2-1 Countdown Overlay -->
+  <div id="countdown-overlay" class="countdown-overlay">
+    <div class="countdown-number" id="countdown-number">3</div>
+    <div class="countdown-hint">¡Prepárate para la primera pregunta!</div>
+  </div>
+
+  <!-- Study Topic Detail Modal -->
+  <div id="topic-detail-modal" class="modal-overlay">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="StudyHub.closeTopicModal()">✕</button>
+      <div id="topic-modal-content">
+        <!-- Injected by StudyHub.openTopicModal() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Intermediate Leaderboard Modal -->
+  <div id="arena-leaderboard-modal" class="modal-overlay">
+    <div class="leaderboard-modal-box">
+      <h2>🏆 Tabla de Posiciones Intermedia</h2>
+      <p>Top 5 mejores estudiantes tras esta pregunta</p>
+
+      <div class="leaderboard-students-list" id="leaderboard-students-list">
+        <!-- Populated dynamically -->
+      </div>
+
+      <button class="btn btn-kahoot-action" id="btn-next-step" onclick="App.advanceFromLeaderboard()">
+        Siguiente Pregunta →
+      </button>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/data/cefrContent.js"></script>
+  <script src="js/data/questionBank.js"></script>
+  <script src="js/soundEngine.js"></script>
+  <script src="js/qrGenerator.js"></script>
+  <script src="js/syncEngine.js"></script>
+  <script src="js/studyHub.js"></script>
+  <script src="js/gradebook.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
